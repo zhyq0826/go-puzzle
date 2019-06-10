@@ -2,25 +2,27 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
-	"time"
+	"sync"
 )
 
 func main() {
-	n, _ := strconv.Atoi(os.Getenv("n"))
+	// n, _ := strconv.Atoi(os.Getenv("n"))
+	n := 10
 	even := make(chan int)
 	finish := make(chan bool)
-	evenOnceDown := true
+	oddCond := sync.NewCond(&sync.Mutex{})
+	evenIsFinished := true
 	go func() {
 		for i := 1; i <= n; i++ {
-			if !evenOnceDown {
-				time.Sleep(time.Second * 1)
+			if !evenIsFinished {
+				oddCond.L.Lock()
+				oddCond.Wait()
+				oddCond.L.Unlock()
 			}
 			if i%2 != 0 {
 				fmt.Println("odd => ", i)
 			} else {
-				evenOnceDown = false
+				evenIsFinished = false
 				even <- i
 			}
 		}
@@ -32,7 +34,8 @@ func main() {
 	go func() {
 		for i := range even {
 			fmt.Println("even => ", i)
-			evenOnceDown = true
+			evenIsFinished = true
+			oddCond.Signal()
 		}
 	}()
 	<-finish
