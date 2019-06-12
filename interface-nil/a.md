@@ -1,0 +1,1 @@
+Interface 如果被赋值，值将不是 nil，详见 https://sanyuesha.com/2017/10/18/go-interface-3/

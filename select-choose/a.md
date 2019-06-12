@@ -1,0 +1,1 @@
+select 类似于 switch case，select 会选择当前第一个 ready 状态的 channel，如果有多个同时准备好，会随机选一个，如果没有则阻塞直到有一个准备好为之。

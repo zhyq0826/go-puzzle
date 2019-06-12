@@ -1,0 +1,1 @@
+由于设置了最大的 processor 是 1，所以第一个 for 输出全是 10，第二个是 0-9，第一个 Goroutine 通过闭包引用了 i, 第二个 Goroutine 通过传参的形式引用了 i
